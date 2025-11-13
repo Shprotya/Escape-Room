@@ -10,6 +10,7 @@ namespace EscapeRoom
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Testing sync");
         }
     }
 }

@@ -1,0 +1,7 @@
+C:\Users\karee\OneDrive - Atlantic TU\OOP\Year2\Sem1\CA2\EscapeRoom\bin\Debug\EscapeRoom.exe.config
+C:\Users\karee\OneDrive - Atlantic TU\OOP\Year2\Sem1\CA2\EscapeRoom\bin\Debug\EscapeRoom.exe
+C:\Users\karee\OneDrive - Atlantic TU\OOP\Year2\Sem1\CA2\EscapeRoom\bin\Debug\EscapeRoom.pdb
+C:\Users\karee\OneDrive - Atlantic TU\OOP\Year2\Sem1\CA2\EscapeRoom\obj\Debug\EscapeRoom.csproj.AssemblyReference.cache
+C:\Users\karee\OneDrive - Atlantic TU\OOP\Year2\Sem1\CA2\EscapeRoom\obj\Debug\EscapeRoom.csproj.CoreCompileInputs.cache
+C:\Users\karee\OneDrive - Atlantic TU\OOP\Year2\Sem1\CA2\EscapeRoom\obj\Debug\EscapeRoom.exe
+C:\Users\karee\OneDrive - Atlantic TU\OOP\Year2\Sem1\CA2\EscapeRoom\obj\Debug\EscapeRoom.pdb
