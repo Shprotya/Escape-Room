@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EscapeRoom
 {
-    class Player
+    public class Player
     {
         // Player properties
         public string Name { get; set; }
@@ -21,6 +21,13 @@ namespace EscapeRoom
             Inventory = new List<string>();
             Score = 1000; // Start with max score
             HintsUsed = 0;
+        }
+
+        // Methods
+        public void UseHint()
+        {
+            HintsUsed++;
+            Score -= 50; // Penalty for using hints
         }
     }
 }
