@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace EscapeRoom
 {
@@ -13,6 +14,7 @@ namespace EscapeRoom
         private int[] years;
         private string selectedPlanet;
         private int correctYear;
+        private bool hasUsedTelescope; // Track if player looked through telescope
 
         // Constructor
         public PlanetDiscoveryPuzzle()
@@ -29,9 +31,34 @@ namespace EscapeRoom
             selectedPlanet = planets[randomIndex];
             correctYear = years[randomIndex];
 
+            hasUsedTelescope = false; //Player didn't look in telescope yet
+            IsSolved = false; // Puzzle starts unsolved
+
+            Description = "A sturdy wooden door blocks your path. It has a 4-digit keypad lock.\n" +
+                         "On the wall, there's an ancient telescope pointed at the night sky.\n" +
+                         "A plaque reads: 'The stars hold the key.'";
+
+            Hint = "Look through the telescope first to see which planet is visible, then enter the year it was discovered.";
+                
         }
 
         // Methods
+
+        // Method to look through telescope
+        public void LookThroughTelescope()
+        {
+            if (hasUsedTelescope)
+            {
+                Console.WriteLine($"\nYou peer through the telescope again. {selectedPlanet} is still visible in the night sky.");
+                return;
+            }
+
+            hasUsedTelescope = true;
+            Console.WriteLine("\n🔭 You look through the ancient telescope...");
+            Thread.Sleep(1000); // Dramatic pause
+            Console.WriteLine($"You can see a celestial body clearly labeled: {selectedPlanet.ToUpper()}");
+            Console.WriteLine("The planet shines brightly in the night sky.");
+        }
         public override bool Solve(string answer, Player player)
         {
             return true;
