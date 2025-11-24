@@ -10,15 +10,15 @@ namespace EscapeRoom
     {
         // Player properties
         public string Name { get; set; }
-        public List<string> Inventory { get; private set; }
+        public List<string> Inventory { get; private set; } // List of items the player has collected
         public int Score { get; set; }
-        public int HintsUsed { get; set; }
+        public int HintsUsed { get; set; } 
 
         // Constructor
         public Player(string name)
         {
             Name = name;
-            Inventory = new List<string>();
+            Inventory = new List<string>(); // Start with empty inventory
             Score = 1000; // Start with max score
             HintsUsed = 0;
         }
