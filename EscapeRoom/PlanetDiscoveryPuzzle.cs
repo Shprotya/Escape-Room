@@ -31,5 +31,10 @@ namespace EscapeRoom
 
         }
 
+        // Methods
+        public override bool Solve(string answer, Player player)
+        {
+            return true;
+        }
     }
 }
