@@ -10,7 +10,11 @@ namespace EscapeRoom
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Testing sync");
+            Game game = new Game();
+            game.Start();
+
+            Console.WriteLine("\n\nThank you for playing! Press any key to exit...");
+            Console.ReadKey();
         }
     }
 }

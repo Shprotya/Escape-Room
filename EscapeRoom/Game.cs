@@ -23,5 +23,41 @@ namespace EscapeRoom
             currentRoomIndex = 0;                 // Start at room 0 (first room)
             gameTimer = new Stopwatch();          // Create the timer
         }
+
+        // Methods
+        // ShowIntro - displays the welcome screen
+        private void ShowIntro()
+        {
+            Console.Clear();
+            Console.WriteLine(@"
+            ╔══════════════════════════════════════════════════════════════╗
+            ║                                                              ║
+            ║        🏛️  ESCAPE FROM THE ANCIENT MUSEUM  🏛️                ║
+            ║                                                              ║
+            ║  You've been locked inside the mysterious Chronos Museum     ║
+            ║  after closing time. The exhibits hold ancient secrets       ║
+            ║  and puzzles. Solve them to escape before the night          ║
+            ║  security system activates!                                  ║
+            ║                                                              ║
+            ║  ⏱️  TIME IS TICKING...                                      ║
+            ║                                                              ║
+            ╚══════════════════════════════════════════════════════════════╝
+            ");
+            Console.WriteLine("\nPress any key to begin your escape...");
+            Console.ReadKey();                    // Wait for player to press a key
+        }
+
+        // Start method - begins the game
+        public void Start()
+        {
+            ShowIntro();                          // Show welcome screen
+
+            Console.Write("\nEnter your name, brave explorer: ");
+            string name = Console.ReadLine();     // Get player's name
+            player = new Player(name);            // Create player object
+
+            startTime = DateTime.Now;             // Record start time
+            gameTimer.Start();                    // Start the timer!
+        }
     }
 }
