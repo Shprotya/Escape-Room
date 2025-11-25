@@ -59,6 +59,23 @@ namespace EscapeRoom
             Console.WriteLine($"You can see a celestial body clearly labeled: {selectedPlanet.ToUpper()}");
             Console.WriteLine("The planet shines brightly in the night sky.");
         }
+
+        public void ShowDiscoveryChart()
+        {
+            // Zip combines the two arrays into an enumerable of anonymous objects
+            var planetData = planets.Zip(years, (p, y) => new { Planet = p, Year = y });
+
+            Console.WriteLine("\n📜 PLANET DISCOVERY CHART");
+            Console.WriteLine("═══════════════════════════════════");
+
+            // Order the combined data by Year, then print
+            foreach (var item in planetData.OrderBy(item => item.Year))
+            {
+                Console.WriteLine($"{item.Planet,-12} - Year {item.Year}");
+            }
+            Console.WriteLine("═══════════════════════════════════");
+        }
+
         public override bool Solve(string answer, Player player)
         {
             // Check if player looked through telescope first

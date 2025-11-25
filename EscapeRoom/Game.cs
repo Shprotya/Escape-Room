@@ -80,6 +80,8 @@ namespace EscapeRoom
 
             startTime = DateTime.Now;             // Record start time
             gameTimer.Start();                    // Start the timer!
+
+            GameLoop();
         }
 
         private void ShowMenu()
@@ -94,6 +96,126 @@ namespace EscapeRoom
                 Console.WriteLine("Type 'back' to return to previous room");
             Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
             Console.Write("Your choice: ");
+        }
+
+        private void SetupRooms()
+        {
+            // Room 1: ASTROLOGY HALL - With random planet puzzle!
+            var room1Puzzle = new PlanetDiscoveryPuzzle();
+            var room1 = new Room(
+                "Astrology Hall",
+                "You find yourself in the Astrology Hall. Ancient star charts cover the walls.\n" +
+                "A magnificent brass telescope stands in the center, pointed toward a skylight.\n" +
+                "The only exit is blocked by an ornate door with a numerical keypad.",
+                room1Puzzle
+            );
+            room1.AddItem("Star Chart");
+            room1.AddItem("Museum Guide");
+            rooms.Add(room1);
+        }
+
+        private void GameLoop()
+        {
+            while (currentRoomIndex < rooms.Count)
+            {   
+                Room currentRoom = rooms[currentRoomIndex];
+                currentRoom.Enter();
+                currentRoom.ShowItems();
+                ShowCurrentTimer(); // Show timer when entering room
+
+                while (!currentRoom.IsCompleted)
+                {
+                    ShowMenu();
+                    string choice = Console.ReadLine()?.ToLower() ?? "";
+
+                    switch (choice)
+                    {
+                        case "1":
+                            ExaminePuzzle(currentRoom);
+                            break;
+                        case "2":
+                            
+                            break;
+                        case "3":
+                            
+                            break;
+                        case "4":
+                            player.ShowInventory();
+                            break;
+                        case "5":
+                            ExamineRoom(currentRoom); // Special examine for Astrology room
+                            break;
+                        case "6":
+                            
+                            break;
+                        case "7":
+                            
+                            break;
+                        default:
+                            Console.WriteLine("\n✗ Invalid choice!");
+                            break;
+                    }
+
+                    if (currentRoom.Puzzle.IsSolved && !currentRoom.IsCompleted)
+                    {
+                        currentRoom.Complete();
+                        player.Score += 200; // Bonus for completing room
+                        Console.WriteLine("\n🎉 Room completed! You can proceed to the next area...");
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                    }
+                }
+
+                currentRoomIndex++;
+            }
+            gameTimer.Stop(); // STOP THE TIMER when game ends
+
+        } //End of Game Loop method
+
+        private void ShowCurrentTimer()
+        {
+            TimeSpan elapsed = gameTimer.Elapsed;
+            Console.WriteLine($"\n⏱️  Time Elapsed: {elapsed.Minutes:D2}:{elapsed.Seconds:D2}");
+        }
+
+        private void ExaminePuzzle(Room room)
+        {
+            Console.WriteLine($"\n📋 PUZZLE:");
+            Console.WriteLine(room.Puzzle.Description);
+        }
+
+        private void ExamineRoom(Room room)
+        {
+            // Special examination for Astrology Hall
+            if (room.Name == "Astrology Hall" && room.Puzzle is PlanetDiscoveryPuzzle planetPuzzle)
+            {
+                Console.WriteLine("\nYou examine the room carefully...");
+                Console.WriteLine("\n1. Look through the telescope");
+                Console.WriteLine("2. Study the planet discovery chart on the wall");
+                Console.WriteLine("3. Return to main menu");
+                Console.Write("\nWhat do you want to examine? ");
+
+                string examineChoice = Console.ReadLine();
+
+                switch (examineChoice)
+                {
+                    case "1":
+                        planetPuzzle.LookThroughTelescope();
+                        break;
+                    case "2":
+                        planetPuzzle.ShowDiscoveryChart();
+                        break;
+                    case "3":
+                        return;
+                    default:
+                        Console.WriteLine("\nInvalid choice.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nYou examine the room carefully but find nothing new.");
+            }
         }
     }
 }

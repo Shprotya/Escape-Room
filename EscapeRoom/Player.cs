@@ -24,6 +24,33 @@ namespace EscapeRoom
         }
 
         // Methods
+        public void AddItem(string item)
+        {
+            Inventory.Add(item);
+            Console.WriteLine($"\n✓ Added '{item}' to inventory!");
+        }
+
+        public bool HasItem(string item)
+        {
+            return Inventory.Contains(item, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public void ShowInventory()
+        {
+            Console.WriteLine("\n=== INVENTORY ===");
+            if (Inventory.Count == 0)
+            {
+                Console.WriteLine("Empty");
+            }
+            else
+            {
+                foreach (var item in Inventory)
+                {
+                    Console.WriteLine($"- {item}");
+                }
+            }
+        }
+
         public void UseHint()
         {
             HintsUsed++;

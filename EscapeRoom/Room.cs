@@ -24,5 +24,51 @@ namespace EscapeRoom
             ItemsInRoom = new List<string>();           // Create an empty list for items
             IsCompleted = false;                        // Room starts as incomplete
         }
+
+        // Methods
+        public void AddItem(string item)
+        {
+            ItemsInRoom.Add(item);
+        }
+
+        public void Enter()
+        {
+            Console.Clear();
+            Console.WriteLine($"\n{'═',60}");
+            Console.WriteLine($"   {Name.ToUpper()}");
+            Console.WriteLine($"{'═',60}");
+            Console.WriteLine($"\n{Description}");
+        }
+
+        public void ShowItems()
+        {
+            if (ItemsInRoom.Count > 0)
+            {
+                Console.WriteLine("\n--- Items you can see in this room ---");
+                foreach (var item in ItemsInRoom)
+                {
+                    Console.WriteLine($"• {item}");
+                }
+            }
+        }
+
+        public bool TakeItem(string item, Player player)
+        {
+            var foundItem = ItemsInRoom.FirstOrDefault(i =>
+                i.Equals(item, StringComparison.OrdinalIgnoreCase));
+
+            if (foundItem != null)
+            {
+                ItemsInRoom.Remove(foundItem);
+                player.AddItem(foundItem);
+                return true;
+            }
+            return false;
+        }
+
+        public void Complete()
+        {
+            IsCompleted = true;
+        }
     }
 }
