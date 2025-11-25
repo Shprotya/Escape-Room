@@ -81,17 +81,19 @@ namespace EscapeRoom
             startTime = DateTime.Now;             // Record start time
             gameTimer.Start();                    // Start the timer!
 
+            SetupRooms();
             GameLoop();
         }
 
         private void ShowMenu()
         {
             Console.WriteLine("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-            Console.WriteLine("1. 🔍 Examine room (find items & clues)");
-            Console.WriteLine("2. 🔐 Attempt to solve puzzle");
-            Console.WriteLine("3. 🎒 Check inventory");
-            Console.WriteLine("4. 💡 Get hint (-50 points)");
-            Console.WriteLine("5. 📊 Show status");
+            Console.WriteLine("1. 👓 Examine Puzzle ");
+            Console.WriteLine("2. 🔍 Examine room (find items & clues)");
+            Console.WriteLine("3. 🔐 Attempt to solve puzzle");
+            Console.WriteLine("4. 🎒 Check inventory");
+            Console.WriteLine("5. 💡 Get hint (-50 points)");
+            Console.WriteLine("6. 📊 Show status");
             if (currentRoomIndex > 0)
                 Console.WriteLine("Type 'back' to return to previous room");
             Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -120,7 +122,6 @@ namespace EscapeRoom
             {   
                 Room currentRoom = rooms[currentRoomIndex];
                 currentRoom.Enter();
-                currentRoom.ShowItems();
                 ShowCurrentTimer(); // Show timer when entering room
 
                 while (!currentRoom.IsCompleted)
@@ -134,22 +135,19 @@ namespace EscapeRoom
                             ExaminePuzzle(currentRoom);
                             break;
                         case "2":
-                            
+                            ExamineRoom(currentRoom);
                             break;
                         case "3":
-                            
+                            AttemptPuzzle(currentRoom);
                             break;
                         case "4":
                             player.ShowInventory();
                             break;
                         case "5":
-                            ExamineRoom(currentRoom); // Special examine for Astrology room
+                            ShowHint(currentRoom);
                             break;
                         case "6":
-                            
-                            break;
-                        case "7":
-                            
+                            ShowStatus();
                             break;
                         default:
                             Console.WriteLine("\n✗ Invalid choice!");
@@ -216,6 +214,48 @@ namespace EscapeRoom
             {
                 Console.WriteLine("\nYou examine the room carefully but find nothing new.");
             }
+        }
+
+        private void AttemptPuzzle(Room room)
+        {
+            if (room.Puzzle.IsSolved)
+            {
+                Console.WriteLine("\n✓ This puzzle is already solved!");
+                return;
+            }
+
+            Console.WriteLine($"\n{room.Puzzle.Description}");
+            Console.Write("\nYour answer: ");
+            string answer = Console.ReadLine() ?? "";
+
+            room.Puzzle.Solve(answer, player);
+        }
+
+        private void ShowHint(Room room)
+        {
+            if (room.Puzzle.IsSolved)
+            {
+                Console.WriteLine("\n✓ Puzzle already solved - no hint needed!");
+                return;
+            }
+
+            player.UseHint();
+            room.Puzzle.ShowHint();
+        }
+
+        private void ShowStatus()
+        {
+            TimeSpan elapsed = gameTimer.Elapsed;
+            Console.WriteLine("\n╔═══════════════════════════════════════╗");
+            Console.WriteLine("║           CURRENT STATUS              ║");
+            Console.WriteLine("╚═══════════════════════════════════════╝");
+            Console.WriteLine($"Player: {player.Name}");
+            Console.WriteLine($"Current Location: {rooms[currentRoomIndex].Name}");
+            Console.WriteLine($"Rooms Completed: {currentRoomIndex}/{rooms.Count}");
+            Console.WriteLine($"Score: {player.Score}");
+            Console.WriteLine($"Hints Used: {player.HintsUsed}");
+            Console.WriteLine($"⏱️  Time Elapsed: {elapsed.Minutes:D2}:{elapsed.Seconds:D2}");
+            Console.WriteLine("═══════════════════════════════════════");
         }
     }
 }

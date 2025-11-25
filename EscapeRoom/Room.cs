@@ -34,22 +34,10 @@ namespace EscapeRoom
         public void Enter()
         {
             Console.Clear();
-            Console.WriteLine($"\n{'═',60}");
-            Console.WriteLine($"   {Name.ToUpper()}");
-            Console.WriteLine($"{'═',60}");
+            Console.WriteLine($"\n===================================");
+            Console.WriteLine($"\n   {Name.ToUpper()}");
+            Console.WriteLine($"\n===================================");
             Console.WriteLine($"\n{Description}");
-        }
-
-        public void ShowItems()
-        {
-            if (ItemsInRoom.Count > 0)
-            {
-                Console.WriteLine("\n--- Items you can see in this room ---");
-                foreach (var item in ItemsInRoom)
-                {
-                    Console.WriteLine($"• {item}");
-                }
-            }
         }
 
         public bool TakeItem(string item, Player player)
