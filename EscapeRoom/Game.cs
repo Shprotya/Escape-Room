@@ -43,6 +43,17 @@ namespace EscapeRoom
             ║                                                              ║
             ╚══════════════════════════════════════════════════════════════╝
             ");
+            Console.WriteLine("\n📜 GAME RULES:");
+            Console.WriteLine("═══════════════════════════════════════════════════════");
+            Console.WriteLine("• Solve puzzles to unlock doors and progress");
+            Console.WriteLine("• EXAMINE rooms carefully to find hidden items");
+            Console.WriteLine("• Collect items for BONUS POINTS (+50 points each)");
+            Console.WriteLine("• Some items are needed to solve puzzles");
+            Console.WriteLine("• Use hints if stuck (costs 50 points)");
+            Console.WriteLine("• ⏱️  Your escape time will be recorded");
+            Console.WriteLine("═══════════════════════════════════════════════════════");
+
+            Console.WriteLine("\n💡 TIP: Always examine rooms before attempting puzzles!");
             Console.WriteLine("\nPress any key to begin your escape...");
             Console.ReadKey();                    // Wait for player to press a key
         }
@@ -56,8 +67,33 @@ namespace EscapeRoom
             string name = Console.ReadLine();     // Get player's name
             player = new Player(name);            // Create player object
 
+            // Ready screen
+            Console.Clear();
+            Console.WriteLine("╔══════════════════════════════════════════════╗");
+            Console.WriteLine($"║  Welcome, {player.Name}!".PadRight(47) + "║");
+            Console.WriteLine("╚══════════════════════════════════════════════╝");
+            Console.WriteLine("\nYou stand at the entrance of the museum.");
+            Console.WriteLine("The doors lock behind you with a heavy THUD.");
+            Console.WriteLine("\n⏱️  The timer will start when you press any key.");
+            Console.WriteLine("\nPress any key to START THE TIMER...");
+            Console.ReadKey();
+
             startTime = DateTime.Now;             // Record start time
             gameTimer.Start();                    // Start the timer!
+        }
+
+        private void ShowMenu()
+        {
+            Console.WriteLine("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            Console.WriteLine("1. 🔍 Examine room (find items & clues)");
+            Console.WriteLine("2. 🔐 Attempt to solve puzzle");
+            Console.WriteLine("3. 🎒 Check inventory");
+            Console.WriteLine("4. 💡 Get hint (-50 points)");
+            Console.WriteLine("5. 📊 Show status");
+            if (currentRoomIndex > 0)
+                Console.WriteLine("Type 'back' to return to previous room");
+            Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            Console.Write("Your choice: ");
         }
     }
 }
