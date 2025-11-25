@@ -55,13 +55,51 @@ namespace EscapeRoom
 
             hasUsedTelescope = true;
             Console.WriteLine("\n🔭 You look through the ancient telescope...");
-            Thread.Sleep(1000); // Dramatic pause
+            Thread.Sleep(2000); // Dramatic pause
             Console.WriteLine($"You can see a celestial body clearly labeled: {selectedPlanet.ToUpper()}");
             Console.WriteLine("The planet shines brightly in the night sky.");
         }
         public override bool Solve(string answer, Player player)
         {
-            return true;
+            // Check if player looked through telescope first
+            if (!hasUsedTelescope)
+            {
+                Console.WriteLine("\n✗ The keypad doesn't respond. Maybe you should examine the room first...");
+                return false;
+            }
+
+            // Try to convert answer to a number
+            if (int.TryParse(answer, out int enteredYear))
+            {
+                // Check if correct
+                if (enteredYear == correctYear)
+                {
+                    IsSolved = true;
+                    Console.WriteLine($"\n✓ CORRECT! {selectedPlanet} was discovered in {correctYear}!");
+                    Console.WriteLine("The keypad beeps and the door unlocks with a satisfying CLICK!");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"\n✗ The year {enteredYear} is incorrect. The keypad beeps angrily.");
+
+                    // Give helpful feedback if they entered a valid planet year
+                    for (int i = 0; i < years.Length; i++)
+                    {
+                        if (years[i] == enteredYear)
+                        {
+                            Console.WriteLine($"💡 That's when {planets[i]} was discovered, but that's not what you saw through the telescope!");
+                            break;
+                        }
+                    }
+                    return false;
+                }
+            }
+            else
+            {
+                Console.WriteLine("\n✗ Please enter a 4-digit year (example: 1781)");
+                return false;
+            }
         }
     }
 }
