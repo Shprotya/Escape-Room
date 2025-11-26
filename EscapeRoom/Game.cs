@@ -130,6 +130,19 @@ namespace EscapeRoom
             room1.AddItem("Star Chart");
             room1.AddItem("Museum Guide");
             rooms.Add(room1); // Add room to the game
+
+            // Room 2: LIBRARY - Fibonacci puzzle
+            var room2Puzzle = new LibraryPuzzle();
+            var room2 = new Room(
+                "Ancient Library",
+                "You enter the Ancient Library. Dusty shelves filled with old tomes surround you.\n" +
+                "In the center, a locked glass cabinet displays a glowing golden key inside.\n" +
+                "Above the cabinet, a stone tablet shows a number sequence.",
+                room2Puzzle // Assign the puzzle to the room
+            );
+            //Add some items to the room
+            room2.AddItem("Old Book");
+            rooms.Add(room2); // Add room to the game
         }
 
         /// <summary>
@@ -169,6 +182,9 @@ namespace EscapeRoom
                             break;
                         case "6":
                             ShowStatus();
+                            break;
+                        case "back":
+                            GoBack(currentRoom);
                             break;
                         default:
                             Console.WriteLine("\n✗ Invalid choice!");
@@ -250,8 +266,10 @@ namespace EscapeRoom
             }
             else
             {
-                Console.WriteLine("\nYou examine the room carefully but find nothing new.");
+                // Special examintaion for searching items in any room
+                SearchForItems(room);
             }
+
         }
 
         /// <summary>
@@ -352,6 +370,23 @@ namespace EscapeRoom
                 {
                     Console.WriteLine($"\n✗ Couldn't find '{choice}'.");
                 }
+            }
+        }
+
+        private void GoBack(Room room)
+        {
+            if (currentRoomIndex > 0)
+            {
+                currentRoomIndex--;
+                Console.WriteLine("\n↩️  Returning to previous room...");
+                System.Threading.Thread.Sleep(1000); // Pause for effect
+                room = rooms[currentRoomIndex];
+                room.Enter();
+                ShowCurrentTimer();
+            }
+            else
+            {
+                Console.WriteLine("\n✗ You are already in the first room!");
             }
         }
         #endregion
