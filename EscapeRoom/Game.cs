@@ -25,6 +25,34 @@ namespace EscapeRoom
         }
 
         // Methods
+        
+        // Start method - begins the game
+        public void Start()
+        {
+            ShowIntro();                          // Show welcome screen
+
+            Console.Write("\nEnter your name, brave explorer: ");
+            string name = Console.ReadLine();     // Get player's name
+            player = new Player(name);            // Create player object
+
+            // Ready screen
+            Console.Clear();
+            Console.WriteLine("╔══════════════════════════════════════════════╗");
+            Console.WriteLine($"║  Welcome, {player.Name}!".PadRight(47) + "║");
+            Console.WriteLine("╚══════════════════════════════════════════════╝");
+            Console.WriteLine("\nYou stand at the entrance of the museum.");
+            Console.WriteLine("The doors lock behind you with a heavy THUD.");
+            Console.WriteLine("\n⏱️  The timer will start when you press any key.");
+            Console.WriteLine("\nPress any key to START THE TIMER...");
+            Console.ReadKey();
+
+            startTime = DateTime.Now;             // Record start time
+            gameTimer.Start();                    // Start the timer!
+
+            SetupRooms();
+            GameLoop();
+        }
+
         // ShowIntro - displays the welcome screen
         private void ShowIntro()
         {
@@ -58,33 +86,6 @@ namespace EscapeRoom
             Console.ReadKey();                    // Wait for player to press a key
         }
 
-        // Start method - begins the game
-        public void Start()
-        {
-            ShowIntro();                          // Show welcome screen
-
-            Console.Write("\nEnter your name, brave explorer: ");
-            string name = Console.ReadLine();     // Get player's name
-            player = new Player(name);            // Create player object
-
-            // Ready screen
-            Console.Clear();
-            Console.WriteLine("╔══════════════════════════════════════════════╗");
-            Console.WriteLine($"║  Welcome, {player.Name}!".PadRight(47) + "║");
-            Console.WriteLine("╚══════════════════════════════════════════════╝");
-            Console.WriteLine("\nYou stand at the entrance of the museum.");
-            Console.WriteLine("The doors lock behind you with a heavy THUD.");
-            Console.WriteLine("\n⏱️  The timer will start when you press any key.");
-            Console.WriteLine("\nPress any key to START THE TIMER...");
-            Console.ReadKey();
-
-            startTime = DateTime.Now;             // Record start time
-            gameTimer.Start();                    // Start the timer!
-
-            SetupRooms();
-            GameLoop();
-        }
-
         private void ShowMenu()
         {
             Console.WriteLine("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -100,6 +101,7 @@ namespace EscapeRoom
             Console.Write("Your choice: ");
         }
 
+        // Create and setup all rooms and their puzzles
         private void SetupRooms()
         {
             // Room 1: ASTROLOGY HALL - With random planet puzzle!
@@ -116,6 +118,7 @@ namespace EscapeRoom
             rooms.Add(room1);
         }
 
+        // Main game loop
         private void GameLoop()
         {
             while (currentRoomIndex < rooms.Count)
@@ -170,6 +173,7 @@ namespace EscapeRoom
 
         } //End of Game Loop method
 
+        #region Helper Methods For main Game Loop
         private void ShowCurrentTimer()
         {
             TimeSpan elapsed = gameTimer.Elapsed;
@@ -190,7 +194,8 @@ namespace EscapeRoom
                 Console.WriteLine("\nYou examine the room carefully...");
                 Console.WriteLine("\n1. Look through the telescope");
                 Console.WriteLine("2. Study the planet discovery chart on the wall");
-                Console.WriteLine("3. Return to main menu");
+                Console.WriteLine("3. Search for items in this room");
+                Console.WriteLine("4. Return to main menu");
                 Console.Write("\nWhat do you want to examine? ");
 
                 string examineChoice = Console.ReadLine();
@@ -204,6 +209,9 @@ namespace EscapeRoom
                         planetPuzzle.ShowDiscoveryChart();
                         break;
                     case "3":
+                        SearchForItems(room);
+                        break;
+                    case "4":
                         return;
                     default:
                         Console.WriteLine("\nInvalid choice.");
@@ -257,5 +265,51 @@ namespace EscapeRoom
             Console.WriteLine($"⏱️  Time Elapsed: {elapsed.Minutes:D2}:{elapsed.Seconds:D2}");
             Console.WriteLine("═══════════════════════════════════════");
         }
+
+        // SearchForItems - allows player to find and collect hidden items
+        private void SearchForItems(Room room)
+        {
+            Console.WriteLine("\n🔦 You search the room thoroughly...");
+            System.Threading.Thread.Sleep(1000); // Dramatic pause
+
+            if (room.ItemsInRoom.Count == 0)
+            {
+                Console.WriteLine("\n✗ You don't find any items here.");
+                Console.WriteLine("(All items in this room have been collected)");
+                return;
+            }
+
+            Console.WriteLine("\n✓ You found some items:");
+            for (int i = 0; i < room.ItemsInRoom.Count; i++)
+            {
+                Console.WriteLine($"  {i + 1}. {room.ItemsInRoom[i]}");
+            }
+
+            Console.Write("\nWhich item do you want to take? (enter number or name): ");
+            string choice = Console.ReadLine() ?? "";
+
+            // Try to parse as number
+            if (int.TryParse(choice, out int itemIndex) && itemIndex > 0 && itemIndex <= room.ItemsInRoom.Count)
+            {
+                string item = room.ItemsInRoom[itemIndex - 1];
+                room.TakeItem(item, player);
+                player.Score += 50; // BONUS POINTS!
+                Console.WriteLine($"💰 +50 bonus points for collecting an item!");
+            }
+            else
+            {
+                // Try to find by name
+                if (room.TakeItem(choice, player))
+                {
+                    player.Score += 50; // BONUS POINTS!
+                    Console.WriteLine($"💰 +50 bonus points for collecting an item!");
+                }
+                else
+                {
+                    Console.WriteLine($"\n✗ Couldn't find '{choice}'.");
+                }
+            }
+        }
+        #endregion
     }
 }
