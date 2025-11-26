@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq; // Required for using LINQ methods like Zip and OrderBy
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
+using System.Threading; // Required for Thread.Sleep
 
 namespace EscapeRoom
-{
+{   
+    /// <summary>
+    /// Represents a puzzle where the player must identify a randomly selected planet 
+    /// using a telescope and enter its historical discovery year on a keypad lock.
+    /// This puzzle requires the player to use two clues: the telescope and the discovery chart.
+    /// </summary>
     public class PlanetDiscoveryPuzzle : Puzzle
     {
         // Property
@@ -27,12 +32,12 @@ namespace EscapeRoom
             Random random = new Random();
             int randomIndex = random.Next(8);
 
-            // Save which planet we use
+            // Save which planet we use for this puzzle instance
             selectedPlanet = planets[randomIndex];
             correctYear = years[randomIndex];
 
-            hasUsedTelescope = false; //Player didn't look in telescope yet
-            IsSolved = false; // Puzzle starts unsolved
+            hasUsedTelescope = false;   //Player didn't look in telescope yet
+            IsSolved = false;           // Puzzle starts unsolved
 
             Description = "A sturdy wooden door blocks your path. It has a 4-digit keypad lock.\n" +
                          "On the wall, there's an ancient telescope pointed at the night sky.\n" +
@@ -44,7 +49,9 @@ namespace EscapeRoom
 
         // Methods
 
-        // Method to look through telescope
+        /// <summary>
+        /// Simulates the player looking through the telescope, revealing the randomly selected planet required for the solution.
+        /// </summary>
         public void LookThroughTelescope()
         {
             if (hasUsedTelescope)
@@ -60,6 +67,9 @@ namespace EscapeRoom
             Console.WriteLine("The planet shines brightly in the night sky.");
         }
 
+        /// <summary>
+        /// Displays the full chart of planets and their known discovery years, providing the second part of the clue.
+        /// </summary>
         public void ShowDiscoveryChart()
         {
             // Zip combines the two arrays into an enumerable of anonymous objects
@@ -76,6 +86,9 @@ namespace EscapeRoom
             Console.WriteLine("═══════════════════════════════════");
         }
 
+        /// <summary>
+        /// Attempts to solve the puzzle using the player's answer (expected to be the 4-digit discovery year).
+        /// </summary>
         public override bool Solve(string answer, Player player)
         {
             // Check if player looked through telescope first

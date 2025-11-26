@@ -7,6 +7,9 @@ using System.Diagnostics; // For Stopwatch timer
 
 namespace EscapeRoom
 {
+    /// <summary>
+    /// The main class that controls the game flow, manages rooms, and tracks player progress.
+    /// </summary>
     public class Game
     {
         // Properties
@@ -25,8 +28,10 @@ namespace EscapeRoom
         }
 
         // Methods
-        
-        // Start method - begins the game
+
+        /// <summary>
+        /// Starts the entire game process: displays intro, gets player name, starts timer, and runs the game loop.
+        /// </summary>
         public void Start()
         {
             ShowIntro();                          // Show welcome screen
@@ -35,7 +40,7 @@ namespace EscapeRoom
             string name = Console.ReadLine();     // Get player's name
             player = new Player(name);            // Create player object
 
-            // Ready screen
+            // Ready screen - wait for player to start the timer
             Console.Clear();
             Console.WriteLine("╔══════════════════════════════════════════════╗");
             Console.WriteLine($"║  Welcome, {player.Name}!".PadRight(47) + "║");
@@ -49,11 +54,13 @@ namespace EscapeRoom
             startTime = DateTime.Now;             // Record start time
             gameTimer.Start();                    // Start the timer!
 
-            SetupRooms();
-            GameLoop();
+            SetupRooms();                         // Build the rooms and puzzles for the game
+            GameLoop();                           // Enter the main interaction loop
         }
 
-        // ShowIntro - displays the welcome screen
+        /// <summary>
+        /// Displays the game's title, backstory, and rules.
+        /// </summary>
         private void ShowIntro()
         {
             Console.Clear();
@@ -86,6 +93,9 @@ namespace EscapeRoom
             Console.ReadKey();                    // Wait for player to press a key
         }
 
+        /// <summary>
+        /// Displays the list of available actions (menu options) to the player.
+        /// </summary>
         private void ShowMenu()
         {
             Console.WriteLine("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -95,13 +105,16 @@ namespace EscapeRoom
             Console.WriteLine("4. 🎒 Check inventory");
             Console.WriteLine("5. 💡 Get hint (-50 points)");
             Console.WriteLine("6. 📊 Show status");
+            // Only show the 'back' option if the player has completed at least one room
             if (currentRoomIndex > 0)
                 Console.WriteLine("Type 'back' to return to previous room");
             Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
             Console.Write("Your choice: ");
         }
 
-        // Create and setup all rooms and their puzzles
+        /// <summary>
+        /// Creates and populates all rooms and their puzzles for the game.
+        /// </summary>
         private void SetupRooms()
         {
             // Room 1: ASTROLOGY HALL - With random planet puzzle!
@@ -111,25 +124,30 @@ namespace EscapeRoom
                 "You find yourself in the Astrology Hall. Ancient star charts cover the walls.\n" +
                 "A magnificent brass telescope stands in the center, pointed toward a skylight.\n" +
                 "The only exit is blocked by an ornate door with a numerical keypad.",
-                room1Puzzle
+                room1Puzzle // Assign the puzzle to the room
             );
+            //Add some items to the room
             room1.AddItem("Star Chart");
             room1.AddItem("Museum Guide");
-            rooms.Add(room1);
+            rooms.Add(room1); // Add room to the game
         }
 
-        // Main game loop
+        /// <summary>
+        /// The central loop of the game. It controls room transitions and player interactions within the current room.
+        /// </summary>
         private void GameLoop()
         {
+            // Loop while the player has not completed all rooms
             while (currentRoomIndex < rooms.Count)
             {   
                 Room currentRoom = rooms[currentRoomIndex];
-                currentRoom.Enter();
-                ShowCurrentTimer(); // Show timer when entering room
+                currentRoom.Enter();        // Display the room's entrance message
+                ShowCurrentTimer();         // Show timer when entering room
 
                 while (!currentRoom.IsCompleted)
                 {
                     ShowMenu();
+                    // Ensures that 'choice' is always a non-null string, 
                     string choice = Console.ReadLine()?.ToLower() ?? "";
 
                     switch (choice)
@@ -157,6 +175,7 @@ namespace EscapeRoom
                             break;
                     }
 
+                    // Check if the puzzle was just solved and complete the room
                     if (currentRoom.Puzzle.IsSolved && !currentRoom.IsCompleted)
                     {
                         currentRoom.Complete();
@@ -167,25 +186,36 @@ namespace EscapeRoom
                     }
                 }
 
-                currentRoomIndex++;
+                currentRoomIndex++; // Move to the next room
             }
             gameTimer.Stop(); // STOP THE TIMER when game ends
 
         } //End of Game Loop method
 
         #region Helper Methods For main Game Loop
+
+        /// <summary>
+        /// Displays the current elapsed time from the game timer.
+        /// </summary>
         private void ShowCurrentTimer()
         {
             TimeSpan elapsed = gameTimer.Elapsed;
             Console.WriteLine($"\n⏱️  Time Elapsed: {elapsed.Minutes:D2}:{elapsed.Seconds:D2}");
         }
 
+        /// <summary>
+        /// Displays the puzzle's description for the current room.
+        /// </summary>
         private void ExaminePuzzle(Room room)
         {
             Console.WriteLine($"\n📋 PUZZLE:");
             Console.WriteLine(room.Puzzle.Description);
         }
 
+        /// <summary>
+        /// Allows the player to examine the current room for clues or to interact with room-specific objects.
+        /// Includes special interaction logic for the Astrology Hall.
+        /// </summary>
         private void ExamineRoom(Room room)
         {
             // Special examination for Astrology Hall
@@ -224,6 +254,9 @@ namespace EscapeRoom
             }
         }
 
+        /// <summary>
+        /// Prompts the player for an answer and attempts to solve the current room's puzzle.
+        /// </summary>
         private void AttemptPuzzle(Room room)
         {
             if (room.Puzzle.IsSolved)
@@ -236,9 +269,13 @@ namespace EscapeRoom
             Console.Write("\nYour answer: ");
             string answer = Console.ReadLine() ?? "";
 
+            // Pass the answer and the player object to the puzzle's Solve method
             room.Puzzle.Solve(answer, player);
         }
 
+        /// <summary>
+        /// Displays a hint for the current puzzle if the player chooses to use one, subtracting points.
+        /// </summary>
         private void ShowHint(Room room)
         {
             if (room.Puzzle.IsSolved)
@@ -251,6 +288,9 @@ namespace EscapeRoom
             room.Puzzle.ShowHint();
         }
 
+        /// <summary>
+        /// Displays the player's current game statistics.
+        /// </summary>
         private void ShowStatus()
         {
             TimeSpan elapsed = gameTimer.Elapsed;
@@ -266,7 +306,9 @@ namespace EscapeRoom
             Console.WriteLine("═══════════════════════════════════════");
         }
 
-        // SearchForItems - allows player to find and collect hidden items
+        /// <summary>
+        /// Allows the player to find and collect hidden items in the room, awarding bonus points.
+        /// </summary>
         private void SearchForItems(Room room)
         {
             Console.WriteLine("\n🔦 You search the room thoroughly...");
@@ -280,6 +322,7 @@ namespace EscapeRoom
             }
 
             Console.WriteLine("\n✓ You found some items:");
+            // List available items
             for (int i = 0; i < room.ItemsInRoom.Count; i++)
             {
                 Console.WriteLine($"  {i + 1}. {room.ItemsInRoom[i]}");
@@ -292,6 +335,7 @@ namespace EscapeRoom
             if (int.TryParse(choice, out int itemIndex) && itemIndex > 0 && itemIndex <= room.ItemsInRoom.Count)
             {
                 string item = room.ItemsInRoom[itemIndex - 1];
+                // Remove item from room and add to player's inventory
                 room.TakeItem(item, player);
                 player.Score += 50; // BONUS POINTS!
                 Console.WriteLine($"💰 +50 bonus points for collecting an item!");

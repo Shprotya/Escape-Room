@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace EscapeRoom
 {
+    /// <summary>
+    /// Represents the player entity in the game, storing their name, score, inventory, and tracking hints used.
+    /// </summary>
     public class Player
     {
         // Player properties
@@ -24,17 +27,28 @@ namespace EscapeRoom
         }
 
         // Methods
+
+        /// <summary>
+        /// Adds a collected item to the player's inventory list and provides console feedback.
+        /// </summary>
         public void AddItem(string item)
         {
             Inventory.Add(item);
             Console.WriteLine($"\n✓ Added '{item}' to inventory!");
         }
 
+        /// <summary>
+        /// Checks if the player currently holds a specific item, performing a case-insensitive search.
+        /// (Will be used later on)
+        /// </summary>
         public bool HasItem(string item)
         {
             return Inventory.Contains(item, StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Displays the full list of items currently held in the player's inventory.
+        /// </summary>
         public void ShowInventory()
         {
             Console.WriteLine("\n=== INVENTORY ===");
@@ -51,6 +65,9 @@ namespace EscapeRoom
             }
         }
 
+        /// <summary>
+        /// Registers that the player has used a hint, penalizes their score by 50 points, and increments the hint counter.
+        /// </summary>
         public void UseHint()
         {
             HintsUsed++;
