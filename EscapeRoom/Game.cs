@@ -157,7 +157,10 @@ namespace EscapeRoom
                 currentRoom.Enter();        // Display the room's entrance message
                 ShowCurrentTimer();         // Show timer when entering room
 
-                while (!currentRoom.IsCompleted)
+                // Flag to indicate if the player chose to go back
+                bool wentBack = false;
+
+                while (!currentRoom.IsCompleted && !wentBack)
                 {
                     ShowMenu();
                     // Ensures that 'choice' is always a non-null string, 
@@ -184,11 +187,17 @@ namespace EscapeRoom
                             ShowStatus();
                             break;
                         case "back":
-                            GoBack(currentRoom);
+                            // Set the flag if going back was successful
+                            wentBack = GoBack();
                             break;
                         default:
                             Console.WriteLine("\n✗ Invalid choice!");
                             break;
+                    }
+
+                    if (wentBack)
+                    {
+                        break; // Exit the inner while loop
                     }
 
                     // Check if the puzzle was just solved and complete the room
@@ -202,7 +211,11 @@ namespace EscapeRoom
                     }
                 }
 
-                currentRoomIndex++; // Move to the next room
+                // Only move forward if the current room is completed
+                if (currentRoom.IsCompleted)
+                {
+                    currentRoomIndex++; // Move to the next room
+                }
             }
             gameTimer.Stop(); // STOP THE TIMER when game ends
 
@@ -373,21 +386,21 @@ namespace EscapeRoom
             }
         }
 
-        private void GoBack(Room room)
+        /// <summary>
+        /// Allows the player to return to the previous room if they forgot to collect items.
+        /// </summary>
+        private bool GoBack()
         {
-            if (currentRoomIndex > 0)
+            if (currentRoomIndex == 0)
             {
-                currentRoomIndex--;
-                Console.WriteLine("\n↩️  Returning to previous room...");
-                System.Threading.Thread.Sleep(1000); // Pause for effect
-                room = rooms[currentRoomIndex];
-                room.Enter();
-                ShowCurrentTimer();
+                Console.WriteLine("\n✗ You're in the first room. Can't go back!");
+                return false;
             }
-            else
-            {
-                Console.WriteLine("\n✗ You are already in the first room!");
-            }
+
+            Console.WriteLine($"\n↩️  Going back to {rooms[currentRoomIndex - 1].Name}...");
+            System.Threading.Thread.Sleep(1000);
+            currentRoomIndex--;  // Move back one room
+            return true;  // Signal that we went back
         }
         #endregion
     }
