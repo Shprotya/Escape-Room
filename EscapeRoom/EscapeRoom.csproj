@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExitDoorPuzzle.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="LibraryPuzzle.cs" />
     <Compile Include="PlanetDiscoveryPuzzle.cs" />

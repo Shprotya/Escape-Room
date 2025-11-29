@@ -64,6 +64,8 @@ namespace EscapeRoom
         private void ShowIntro()
         {
             Console.Clear();
+            // The @ symbol turns a standard C# string into a verbatim string literal.
+            // which means it allows multi-line text and ignores escape sequences.
             Console.WriteLine(@"
             ╔══════════════════════════════════════════════════════════════╗
             ║                                                              ║
@@ -118,8 +120,8 @@ namespace EscapeRoom
         private void SetupRooms()
         {
             // Room 1: ASTROLOGY HALL - With random planet puzzle!
-            var room1Puzzle = new PlanetDiscoveryPuzzle();
-            var room1 = new Room(
+            PlanetDiscoveryPuzzle room1Puzzle = new PlanetDiscoveryPuzzle();
+            Room room1 = new Room(
                 "Astrology Hall",
                 "You find yourself in the Astrology Hall. Ancient star charts cover the walls.\n" +
                 "A magnificent brass telescope stands in the center, pointed toward a skylight.\n" +
@@ -132,8 +134,8 @@ namespace EscapeRoom
             rooms.Add(room1); // Add room to the game
 
             // Room 2: LIBRARY - Fibonacci puzzle
-            var room2Puzzle = new LibraryPuzzle();
-            var room2 = new Room(
+            LibraryPuzzle room2Puzzle = new LibraryPuzzle();
+            Room room2 = new Room(
                 "Ancient Library",
                 "You enter the Ancient Library. Dusty shelves filled with old tomes surround you.\n" +
                 "In the center, a locked glass cabinet displays a glowing golden key inside.\n" +
@@ -157,10 +159,7 @@ namespace EscapeRoom
                 currentRoom.Enter();        // Display the room's entrance message
                 ShowCurrentTimer();         // Show timer when entering room
 
-                // Flag to indicate if the player chose to go back
-                bool wentBack = false;
-
-                while (!currentRoom.IsCompleted && !wentBack)
+                while (!currentRoom.IsCompleted)
                 {
                     ShowMenu();
                     // Ensures that 'choice' is always a non-null string, 
@@ -186,18 +185,9 @@ namespace EscapeRoom
                         case "6":
                             ShowStatus();
                             break;
-                        case "back":
-                            // Set the flag if going back was successful
-                            wentBack = GoBack();
-                            break;
                         default:
                             Console.WriteLine("\n✗ Invalid choice!");
                             break;
-                    }
-
-                    if (wentBack)
-                    {
-                        break; // Exit the inner while loop
                     }
 
                     // Check if the puzzle was just solved and complete the room
