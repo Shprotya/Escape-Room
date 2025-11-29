@@ -204,13 +204,36 @@ namespace EscapeRoom
                     }
 
                     // Check if the puzzle was just solved and complete the room
+                    // Check if the puzzle was just solved and the room is NOT yet completed
                     if (currentRoom.Puzzle.IsSolved && !currentRoom.IsCompleted)
                     {
-                        currentRoom.Complete();
+                        // The player successfully solved the puzzle. Give them bonus points.
                         player.Score += 200; // Bonus for completing room
-                        Console.WriteLine("\n🎉 Room completed! You can proceed to the next area...");
-                        Console.WriteLine("Press any key to continue...");
-                        Console.ReadKey();
+
+                        Console.WriteLine("\n🎉 Puzzle solved! The path is open!");
+
+                        // **CRITICAL CODE FOR PLAYER CHOICE:**
+                        Console.WriteLine("-----------------------------------------------------");
+                        Console.WriteLine("You can now proceed to the next area.");
+                        Console.WriteLine("If you haven't collected all items, now is your chance!");
+                        Console.WriteLine("\nPress **Y** to move to the next room, or **N** to stay in this room (to collect items, etc.).");
+                        Console.Write("Proceed? (Y/N): ");
+
+                        string proceedChoice = Console.ReadLine()?.ToLower() ?? "";
+
+                        if (proceedChoice == "y")
+                        {
+                            // Mark the room as completed and allow the outer loop to advance the index.
+                            currentRoom.Complete();
+                            Console.WriteLine("\nPress any key to continue...");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            // Player chose 'N' or an invalid choice.
+                            // The room remains incomplete for now, keeping them in the inner loop.
+                            Console.WriteLine("\nStaying in the room. Remember to check option 2 to examine for items!");
+                        }
                     }
                 }
 
