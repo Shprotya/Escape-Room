@@ -43,11 +43,11 @@ namespace EscapeRoom
             // Ready screen - wait for player to start the timer
             Console.Clear();
             Console.WriteLine("╔══════════════════════════════════════════════╗");
-            Console.WriteLine($"║  Welcome, {player.Name}!".PadRight(47) + "║");
+            Console.WriteLine($"║ Welcome, {player.Name}!".PadRight(47) + "║");
             Console.WriteLine("╚══════════════════════════════════════════════╝");
             Console.WriteLine("\nYou stand at the entrance of the museum.");
             Console.WriteLine("The doors lock behind you with a heavy THUD.");
-            Console.WriteLine("\n⏱️  The timer will start when you press any key.");
+            Console.WriteLine("\n⏱️ The timer will start when you press any key.");
             Console.WriteLine("\nPress any key to START THE TIMER...");
             Console.ReadKey();
 
@@ -69,14 +69,14 @@ namespace EscapeRoom
             Console.WriteLine(@"
             ╔══════════════════════════════════════════════════════════════╗
             ║                                                              ║
-            ║        🏛️  ESCAPE FROM THE ANCIENT MUSEUM  🏛️                ║
+            ║         🏛️ ESCAPE FROM THE ANCIENT MUSEUM 🏛️          ║
             ║                                                              ║
-            ║  You've been locked inside the mysterious Chronos Museum     ║
-            ║  after closing time. The exhibits hold ancient secrets       ║
-            ║  and puzzles. Solve them to escape before the night          ║
-            ║  security system activates!                                  ║
+            ║ You've been locked inside the mysterious Chronos Museum      ║
+            ║ after closing time. The exhibits hold ancient secrets        ║
+            ║ and puzzles. Solve them to escape before the night           ║
+            ║ security system activates!                                   ║
             ║                                                              ║
-            ║  ⏱️  TIME IS TICKING...                                      ║
+            ║ ⏱️ TIME IS TICKING...                                        ║
             ║                                                              ║
             ╚══════════════════════════════════════════════════════════════╝
             ");
@@ -87,7 +87,7 @@ namespace EscapeRoom
             Console.WriteLine("• Collect items for BONUS POINTS (+50 points each)");
             Console.WriteLine("• Some items are needed to solve puzzles");
             Console.WriteLine("• Use hints if stuck (costs 50 points)");
-            Console.WriteLine("• ⏱️  Your escape time will be recorded");
+            Console.WriteLine("• ⏱️ Your escape time will be recorded");
             Console.WriteLine("═══════════════════════════════════════════════════════");
 
             Console.WriteLine("\n💡 TIP: Always examine rooms before attempting puzzles!");
@@ -116,19 +116,19 @@ namespace EscapeRoom
         /// </summary>
         private void SetupRooms()
         {
-            //// Room 1: ASTROLOGY HALL - With random planet puzzle!
-            //PlanetDiscoveryPuzzle room1Puzzle = new PlanetDiscoveryPuzzle();
-            //Room room1 = new Room(
-            //    "Astrology Hall",
-            //    "You find yourself in the Astrology Hall. Ancient star charts cover the walls.\n" +
-            //    "A magnificent brass telescope stands in the center, pointed toward a skylight.\n" +
-            //    "The only exit is blocked by an ornate door with a numerical keypad.",
-            //    room1Puzzle // Assign the puzzle to the room
-            //);
-            ////Add some items to the room
-            //room1.AddItem("Star Chart");
-            //room1.AddItem("Museum Guide");
-            //rooms.Add(room1); // Add room to the game
+            // Room 1: ASTROLOGY HALL - With random planet puzzle! (Currently commented out)
+            PlanetDiscoveryPuzzle room1Puzzle = new PlanetDiscoveryPuzzle();
+            Room room1 = new Room(
+                "Astrology Hall",
+                "You find yourself in the Astrology Hall. Ancient star charts cover the walls.\n" +
+                "A magnificent brass telescope stands in the center, pointed toward a skylight.\n" +
+                "The only exit is blocked by an ornate door with a numerical keypad.",
+                room1Puzzle // Assign the puzzle to the room
+            );
+            //Add some items to the room
+            room1.AddItem("Star Chart");
+            room1.AddItem("Museum Guide");
+            rooms.Add(room1); // Add room to the game
 
             // Room 2: LIBRARY - Fibonacci puzzle
             Room room2 = new Room(
@@ -136,14 +136,14 @@ namespace EscapeRoom
                 "You enter the Ancient Library. Dusty shelves filled with old tomes surround you.\n" +
                 "In the center, a locked glass cabinet displays a glowing golden key inside.\n" +
                 "Above the cabinet, a stone tablet shows a number sequence.",
-                null  // ← Temporarily null, we'll set it below
+                null  // ← Temporarily null, set it below
             );
 
             // Create the puzzle AFTER the room, passing room as parameter
             LibraryPuzzle room2Puzzle = new LibraryPuzzle(room2);
             room2.Puzzle = room2Puzzle;  // Now assign the puzzle
 
-            room2.AddItem("Old Book");
+            room2.AddItem("Old Book"); // Only the book is here initially
             rooms.Add(room2);
 
             // Room 3: FINAL ROOM - Simple riddle puzzle
@@ -167,10 +167,10 @@ namespace EscapeRoom
         {
             // Loop while the player has not completed all rooms
             while (currentRoomIndex < rooms.Count)
-            {   
+            {
                 Room currentRoom = rooms[currentRoomIndex];
-                currentRoom.Enter();        // Display the room's entrance message
-                ShowCurrentTimer();         // Show timer when entering room
+                currentRoom.Enter();      // Display the room's entrance message
+                ShowCurrentTimer();       // Show timer when entering room
 
                 while (!currentRoom.IsCompleted)
                 {
@@ -203,38 +203,8 @@ namespace EscapeRoom
                             break;
                     }
 
-                    // Check if the puzzle was just solved and complete the room
-                    // Check if the puzzle was just solved and the room is NOT yet completed
-                    if (currentRoom.Puzzle.IsSolved && !currentRoom.IsCompleted)
-                    {
-                        // The player successfully solved the puzzle. Give them bonus points.
-                        player.Score += 200; // Bonus for completing room
-
-                        Console.WriteLine("\n🎉 Puzzle solved! The path is open!");
-
-                        // **CRITICAL CODE FOR PLAYER CHOICE:**
-                        Console.WriteLine("-----------------------------------------------------");
-                        Console.WriteLine("You can now proceed to the next area.");
-                        Console.WriteLine("If you haven't collected all items, now is your chance!");
-                        Console.WriteLine("\nPress **Y** to move to the next room, or **N** to stay in this room (to collect items, etc.).");
-                        Console.Write("Proceed? (Y/N): ");
-
-                        string proceedChoice = Console.ReadLine()?.ToLower() ?? "";
-
-                        if (proceedChoice == "y")
-                        {
-                            // Mark the room as completed and allow the outer loop to advance the index.
-                            currentRoom.Complete();
-                            Console.WriteLine("\nPress any key to continue...");
-                            Console.ReadKey();
-                        }
-                        else
-                        {
-                            // Player chose 'N' or an invalid choice.
-                            // The room remains incomplete for now, keeping them in the inner loop.
-                            Console.WriteLine("\nStaying in the room. Remember to check option 2 to examine for items!");
-                        }
-                    }
+                    // CHECK FOR COMPLETION: If the puzzle is solved, trigger the Y/N prompt.
+                    HandleRoomCompletion(currentRoom);
                 }
 
                 // Only move forward if the current room is completed
@@ -244,11 +214,47 @@ namespace EscapeRoom
                 }
             }
             gameTimer.Stop(); // STOP THE TIMER when game ends
-            ShowVictory();         // Show victory screen
+            ShowVictory();            // Show victory screen
 
         } //End of Game Loop method
 
         #region Helper Methods For main Game Loop
+
+        /// <summary>
+        /// Prompts the player to move to the next room if the current puzzle is solved.
+        /// Returns true if the player chooses to advance and the room is completed.
+        /// </summary>
+        private bool HandleRoomCompletion(Room currentRoom)
+        {
+            // Only proceed if the puzzle is solved and the room is not already marked complete
+            if (currentRoom.Puzzle.IsSolved && !currentRoom.IsCompleted)
+            {
+                Console.WriteLine("\n🎉 Puzzle solved! The path is open!");
+                Console.WriteLine("You can now proceed to the next area.");
+                Console.WriteLine("\nPress **Y** to move to the next room, or **N** to stay in this room (to collect items, etc.).");
+                Console.Write("Proceed? (Y/N): ");
+
+                string proceedChoice = Console.ReadLine()?.ToLower() ?? "";
+
+                if (proceedChoice == "y")
+                {
+                    // Mark the room as completed and allow the outer loop to advance the index.
+                    currentRoom.Complete();
+                    // We only award the room completion bonus when the player chooses to move on
+                    player.Score += 200;
+                    Console.WriteLine("\nPress any key to continue...");
+                    Console.ReadKey();
+                    return true; // Signal that the room is complete
+                }
+                else
+                {
+                    // Player chose 'N' or an invalid choice.
+                    // The room remains incomplete, keeping them in the inner loop.
+                    Console.WriteLine("\nStaying in the room. Remember to check option 2 to examine for items!");
+                }
+            }
+            return false; // Did not advance/is already complete
+        }
 
         /// <summary>
         /// Displays the current elapsed time from the game timer.
@@ -256,7 +262,7 @@ namespace EscapeRoom
         private void ShowCurrentTimer()
         {
             TimeSpan elapsed = gameTimer.Elapsed;
-            Console.WriteLine($"\n⏱️  Time Elapsed: {elapsed.Minutes:D2}:{elapsed.Seconds:D2}");
+            Console.WriteLine($"\n⏱️ Time Elapsed: {elapsed.Minutes:D2}:{elapsed.Seconds:D2}");
         }
 
         /// <summary>
@@ -265,6 +271,11 @@ namespace EscapeRoom
         private void ExaminePuzzle(Room room)
         {
             Console.WriteLine($"\n📋 PUZZLE:");
+            // Check if the puzzle is solved and update the description if necessary
+            if (room.Puzzle.IsSolved)
+            {
+                Console.WriteLine("\n✓ This puzzle is already solved! The way forward is open.");
+            }
             Console.WriteLine(room.Puzzle.Description);
         }
 
@@ -340,12 +351,15 @@ namespace EscapeRoom
 
         /// <summary>
         /// Prompts the player for an answer and attempts to solve the current room's puzzle.
+        /// If the puzzle is already solved, it immediately prompts the player to proceed.
         /// </summary>
         private void AttemptPuzzle(Room room)
         {
             if (room.Puzzle.IsSolved)
             {
                 Console.WriteLine("\n✓ This puzzle is already solved!");
+                // New logic: Immediately trigger the 'Y/N' prompt without asking for the answer again.
+                HandleRoomCompletion(room);
                 return;
             }
 
@@ -354,6 +368,7 @@ namespace EscapeRoom
             string answer = Console.ReadLine() ?? "";
 
             // Pass the answer and the player object to the puzzle's Solve method
+            // If Solve returns true, the puzzle is marked IsSolved, and the GameLoop check will handle the prompt.
             room.Puzzle.Solve(answer, player);
         }
 
@@ -386,7 +401,7 @@ namespace EscapeRoom
             Console.WriteLine($"Rooms Completed: {currentRoomIndex}/{rooms.Count}");
             Console.WriteLine($"Score: {player.Score}");
             Console.WriteLine($"Hints Used: {player.HintsUsed}");
-            Console.WriteLine($"⏱️  Time Elapsed: {elapsed.Minutes:D2}:{elapsed.Seconds:D2}");
+            Console.WriteLine($"⏱️ Time Elapsed: {elapsed.Minutes:D2}:{elapsed.Seconds:D2}");
             Console.WriteLine("═══════════════════════════════════════");
         }
 
@@ -451,13 +466,13 @@ namespace EscapeRoom
             Console.WriteLine(@"
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║              🎊  YOU ESCAPED THE MUSEUM!  🎊                 ║
+║           🎊 YOU ESCAPED THE MUSEUM! 🎊                      ║
 ║                                                              ║
-║  Congratulations! You've solved all the ancient puzzles      ║
-║  and collected the necessary items to unlock your freedom!   ║
+║ Congratulations! You've solved all the ancient puzzles       ║
+║ and collected the necessary items to unlock your freedom!    ║
 ║                                                              ║
-║  The morning sun greets you as you step outside.             ║
-║  The nightmare is over. You are FREE!                        ║
+║ The morning sun greets you as you step outside.              ║
+║ The nightmare is over. You are FREE!                         ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 ");
@@ -466,12 +481,12 @@ namespace EscapeRoom
 
             // Final statistics
             Console.WriteLine($"\n{new string('─', 60)}");
-            Console.WriteLine("                    FINAL RESULTS");
+            Console.WriteLine("                     FINAL RESULTS");
             Console.WriteLine($"{new string('─', 60)}");
             Console.WriteLine($"🎭 Explorer Name: {player.Name}");
             Console.WriteLine($"💰 Final Score: {player.Score} points");
             Console.WriteLine($"💡 Hints Used: {player.HintsUsed}");
-            Console.WriteLine($"⏱️  Escape Time: {totalTime.Minutes:D2}:{totalTime.Seconds:D2}");
+            Console.WriteLine($"⏱️ Escape Time: {totalTime.Minutes:D2}:{totalTime.Seconds:D2}");
             Console.WriteLine($"{new string('─', 60)}");
 
             // Time-based rating
@@ -485,7 +500,7 @@ namespace EscapeRoom
             else
                 timeRating = "🐌 TOOK YOUR TIME - But you made it!";
 
-            Console.WriteLine($"\n⏱️  Time Rating: {timeRating}");
+            Console.WriteLine($"\n⏱️ Time Rating: {timeRating}");
 
             // Score-based rating
             string scoreRating;
@@ -512,12 +527,12 @@ namespace EscapeRoom
             {
                 foreach (var item in player.Inventory)
                 {
-                    Console.WriteLine($"   • {item}");
+                    Console.WriteLine($"  • {item}");
                 }
             }
             else
             {
-                Console.WriteLine("   (None - you traveled light!)");
+                Console.WriteLine("  (None - you traveled light!)");
             }
 
             Console.WriteLine($"\n{new string('─', 60)}");
