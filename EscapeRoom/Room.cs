@@ -9,7 +9,7 @@ namespace EscapeRoom
     /// <summary>
     /// Represents a single location within the Escape Room game, containing a puzzle, a description, and collectible items.
     /// </summary>
-    internal class Room
+    public class Room
     {
         // Properties
         public string Name { get; set; }                // Name of the room (e.g., "Astrology")

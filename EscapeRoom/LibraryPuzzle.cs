@@ -10,14 +10,15 @@ namespace EscapeRoom
     {
         // Property
         private int correctAnswer;
+        private Room parentRoom;  // Reference to the room this puzzle is in
 
-        // Constructor
-        public LibraryPuzzle()
+        // Constructor - now takes the room as parameter
+        public LibraryPuzzle(Room room)
         {
-            correctAnswer = 13;  // Answer to the sequence
+            correctAnswer = 13;
             IsSolved = false;
+            parentRoom = room;  // Save reference to the room
 
-            // Simple description 
             Description = "A locked glass cabinet displays a glowing GOLDEN KEY inside.\n" +
                          "Above the cabinet, a stone tablet shows a mysterious number sequence.\n" +
                          "You need to solve it to unlock the cabinet.";
@@ -27,7 +28,6 @@ namespace EscapeRoom
 
         // Methods
 
-        // Show the number sequence - ONLY called when examining the tablet
         public void ShowNumberSequence()
         {
             Console.WriteLine("\n📊 You study the stone tablet carefully...");
@@ -43,26 +43,34 @@ namespace EscapeRoom
             Console.WriteLine("\n💡 Look for a pattern in how the numbers grow...");
         }
 
-        public override bool Solve(string answer, Player player)    
+        public override bool Solve(string answer, Player player)
         {
             if (int.TryParse(answer, out int playerAnswer))
             {
                 if (playerAnswer == correctAnswer)
                 {
                     IsSolved = true;
-                    Console.WriteLine("\n🔓 The cabinet clicks open, revealing the GOLDEN KEY! You take it.");
-                    player.Inventory.Add("Golden Key");
+                    Console.WriteLine("\n✓ CORRECT! The answer is 13!");
+                    Console.WriteLine("🔓 The glass cabinet clicks open!");
+
+                    // ADD THE GOLDEN KEY TO THE ROOM NOW!
+                    parentRoom.AddItem("Golden Key");
+
+                    Console.WriteLine("🔑 The Golden Key is now available!");
+                    Console.WriteLine("💡 Search the room to collect it!");
+                    Console.WriteLine("\n⚠️  WARNING: You'll need this key to escape the museum!");
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine("\n❌ That's not the correct number. Try again!");
+                    Console.WriteLine($"\n✗ {playerAnswer} is not correct. The cabinet remains locked.");
+                    Console.WriteLine("💡 Look at how each number relates to the previous ones...");
                     return false;
                 }
             }
             else
             {
-                Console.WriteLine("\n❌ Please enter a valid number.");
+                Console.WriteLine("\n✗ Please enter a number.");
                 return false;
             }
         }

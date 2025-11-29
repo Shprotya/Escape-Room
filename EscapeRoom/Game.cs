@@ -116,32 +116,35 @@ namespace EscapeRoom
         /// </summary>
         private void SetupRooms()
         {
-            // Room 1: ASTROLOGY HALL - With random planet puzzle!
-            PlanetDiscoveryPuzzle room1Puzzle = new PlanetDiscoveryPuzzle();
-            Room room1 = new Room(
-                "Astrology Hall",
-                "You find yourself in the Astrology Hall. Ancient star charts cover the walls.\n" +
-                "A magnificent brass telescope stands in the center, pointed toward a skylight.\n" +
-                "The only exit is blocked by an ornate door with a numerical keypad.",
-                room1Puzzle // Assign the puzzle to the room
-            );
-            //Add some items to the room
-            room1.AddItem("Star Chart");
-            room1.AddItem("Museum Guide");
-            rooms.Add(room1); // Add room to the game
+            //// Room 1: ASTROLOGY HALL - With random planet puzzle!
+            //PlanetDiscoveryPuzzle room1Puzzle = new PlanetDiscoveryPuzzle();
+            //Room room1 = new Room(
+            //    "Astrology Hall",
+            //    "You find yourself in the Astrology Hall. Ancient star charts cover the walls.\n" +
+            //    "A magnificent brass telescope stands in the center, pointed toward a skylight.\n" +
+            //    "The only exit is blocked by an ornate door with a numerical keypad.",
+            //    room1Puzzle // Assign the puzzle to the room
+            //);
+            ////Add some items to the room
+            //room1.AddItem("Star Chart");
+            //room1.AddItem("Museum Guide");
+            //rooms.Add(room1); // Add room to the game
 
             // Room 2: LIBRARY - Fibonacci puzzle
-            LibraryPuzzle room2Puzzle = new LibraryPuzzle();
             Room room2 = new Room(
                 "Ancient Library",
                 "You enter the Ancient Library. Dusty shelves filled with old tomes surround you.\n" +
                 "In the center, a locked glass cabinet displays a glowing golden key inside.\n" +
                 "Above the cabinet, a stone tablet shows a number sequence.",
-                room2Puzzle // Assign the puzzle to the room
+                null  // ← Temporarily null, we'll set it below
             );
-            //Add some items to the room
+
+            // Create the puzzle AFTER the room, passing room as parameter
+            LibraryPuzzle room2Puzzle = new LibraryPuzzle(room2);
+            room2.Puzzle = room2Puzzle;  // Now assign the puzzle
+
             room2.AddItem("Old Book");
-            rooms.Add(room2); // Add room to the game
+            rooms.Add(room2);
 
             // Room 3: FINAL ROOM - Simple riddle puzzle
             ExitDoorPuzzle room3Puzzle = new ExitDoorPuzzle();
@@ -153,7 +156,6 @@ namespace EscapeRoom
             );
             //Add some items to the room
             room3.AddItem("Ancient Coin");
-            room2.AddItem("Golden Key");
             rooms.Add(room3); // Add room to the game
 
         }

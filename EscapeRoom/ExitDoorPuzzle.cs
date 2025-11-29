@@ -44,16 +44,12 @@ namespace EscapeRoom
             {
                 attemptsWithoutKey++;
 
-                if (attemptsWithoutKey >= 3)
+                if (attemptsWithoutKey >= 1)
                 {
                     ShowGameOver();
                     Environment.Exit(0);
                 }
 
-                Console.WriteLine("\n✗ ERROR: The keyhole is empty!");
-                Console.WriteLine($"💡 You need the '{requiredKey}' to unlock this door.");
-                Console.WriteLine($"\n⚠️  Attempts without key: {attemptsWithoutKey}/3");
-                Console.WriteLine("If you can't find the key after 3 attempts, you'll be trapped forever!");
                 return false;
             }
 
@@ -102,7 +98,7 @@ namespace EscapeRoom
             Console.WriteLine(@"
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║                    ☠️  GAME OVER  ☠️                          ║
+║                    ☠️  GAME OVER  ☠️                         ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 ");
