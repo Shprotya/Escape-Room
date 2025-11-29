@@ -107,9 +107,6 @@ namespace EscapeRoom
             Console.WriteLine("4. 🎒 Check inventory");
             Console.WriteLine("5. 💡 Get hint (-50 points)");
             Console.WriteLine("6. 📊 Show status");
-            // Only show the 'back' option if the player has completed at least one room
-            if (currentRoomIndex > 0)
-                Console.WriteLine("Type 'back' to return to previous room");
             Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
             Console.Write("Your choice: ");
         }
@@ -145,6 +142,20 @@ namespace EscapeRoom
             //Add some items to the room
             room2.AddItem("Old Book");
             rooms.Add(room2); // Add room to the game
+
+            // Room 3: FINAL ROOM - Simple riddle puzzle
+            ExitDoorPuzzle room3Puzzle = new ExitDoorPuzzle();
+            Room room3 = new Room(
+                "Exit Chamber",
+                "You've reached the Exit Chamber. A massive door stands before you, adorned with ancient symbols.\n" +
+                "A riddle is inscribed on the door, challenging you to prove your wisdom to escape.",
+                room3Puzzle // Assign the puzzle to the room
+            );
+            //Add some items to the room
+            room3.AddItem("Ancient Coin");
+            room2.AddItem("Golden Key");
+            rooms.Add(room3); // Add room to the game
+
         }
 
         /// <summary>
@@ -208,6 +219,7 @@ namespace EscapeRoom
                 }
             }
             gameTimer.Stop(); // STOP THE TIMER when game ends
+            ShowVictory();         // Show victory screen
 
         } //End of Game Loop method
 
@@ -261,6 +273,32 @@ namespace EscapeRoom
                         SearchForItems(room);
                         break;
                     case "4":
+                        return;
+                    default:
+                        Console.WriteLine("\nInvalid choice.");
+                        break;
+                }
+            }
+            // Special examination for Ancient Library
+            else if (room.Name == "Ancient Library" && room.Puzzle is LibraryPuzzle libraryPuzzle)
+            {
+                Console.WriteLine("What do you want to examine?");
+                Console.WriteLine("1. Study the number sequence tablet");
+                Console.WriteLine("2. Search for items in this room");
+                Console.WriteLine("3. Return to main menu");
+                Console.Write("\nWhat do you want to examine? ");
+
+                string examineChoice = Console.ReadLine();
+
+                switch (examineChoice)
+                {
+                    case "1":
+                        libraryPuzzle.ShowNumberSequence();  // Show sequence ONLY here
+                        break;
+                    case "2":
+                        SearchForItems(room);
+                        break;
+                    case "3":
                         return;
                     default:
                         Console.WriteLine("\nInvalid choice.");
@@ -377,21 +415,90 @@ namespace EscapeRoom
         }
 
         /// <summary>
-        /// Allows the player to return to the previous room if they forgot to collect items.
+        /// Displays the victory screen with final statistics when the player successfully escapes.
         /// </summary>
-        private bool GoBack()
+        private void ShowVictory()
         {
-            if (currentRoomIndex == 0)
+            TimeSpan totalTime = gameTimer.Elapsed;
+            Console.Clear();
+
+            // Victory banner
+            Console.WriteLine(@"
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║              🎊  YOU ESCAPED THE MUSEUM!  🎊                 ║
+║                                                              ║
+║  Congratulations! You've solved all the ancient puzzles      ║
+║  and collected the necessary items to unlock your freedom!   ║
+║                                                              ║
+║  The morning sun greets you as you step outside.             ║
+║  The nightmare is over. You are FREE!                        ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+");
+
+            System.Threading.Thread.Sleep(2000);
+
+            // Final statistics
+            Console.WriteLine($"\n{new string('─', 60)}");
+            Console.WriteLine("                    FINAL RESULTS");
+            Console.WriteLine($"{new string('─', 60)}");
+            Console.WriteLine($"🎭 Explorer Name: {player.Name}");
+            Console.WriteLine($"💰 Final Score: {player.Score} points");
+            Console.WriteLine($"💡 Hints Used: {player.HintsUsed}");
+            Console.WriteLine($"⏱️  Escape Time: {totalTime.Minutes:D2}:{totalTime.Seconds:D2}");
+            Console.WriteLine($"{new string('─', 60)}");
+
+            // Time-based rating
+            string timeRating;
+            if (totalTime.TotalMinutes < 3)
+                timeRating = "⚡ LIGHTNING FAST! You're a speedrunner!";
+            else if (totalTime.TotalMinutes < 5)
+                timeRating = "🏃 SPEEDY ESCAPE! Very impressive!";
+            else if (totalTime.TotalMinutes < 10)
+                timeRating = "🚶 STEADY PACE - Well done!";
+            else
+                timeRating = "🐌 TOOK YOUR TIME - But you made it!";
+
+            Console.WriteLine($"\n⏱️  Time Rating: {timeRating}");
+
+            // Score-based rating
+            string scoreRating;
+            if (player.Score >= 1400)
+                scoreRating = "⭐⭐⭐ MASTER EXPLORER - Perfect run!";
+            else if (player.Score >= 1200)
+                scoreRating = "⭐⭐⭐ EXPERT ADVENTURER - Excellent!";
+            else if (player.Score >= 1000)
+                scoreRating = "⭐⭐ SKILLED EXPLORER - Great job!";
+            else if (player.Score >= 800)
+                scoreRating = "⭐ BRAVE SURVIVOR - You made it!";
+            else
+                scoreRating = "⭐ LUCKY ESCAPEE - Close call!";
+
+            Console.WriteLine($"💯 Score Rating: {scoreRating}");
+
+            Console.WriteLine($"\n{new string('═', 60)}");
+            Console.WriteLine("           🏆 CONGRATULATIONS ON YOUR ESCAPE! 🏆");
+            Console.WriteLine($"{new string('═', 60)}");
+
+            // Inventory summary
+            Console.WriteLine("\n📦 Items Collected During Your Journey:");
+            if (player.Inventory.Count > 0)
             {
-                Console.WriteLine("\n✗ You're in the first room. Can't go back!");
-                return false;
+                foreach (var item in player.Inventory)
+                {
+                    Console.WriteLine($"   • {item}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("   (None - you traveled light!)");
             }
 
-            Console.WriteLine($"\n↩️  Going back to {rooms[currentRoomIndex - 1].Name}...");
-            System.Threading.Thread.Sleep(1000);
-            currentRoomIndex--;  // Move back one room
-            return true;  // Signal that we went back
+            Console.WriteLine($"\n{new string('─', 60)}");
+            Console.WriteLine("\n✨ Thank you for playing Escape from the Ancient Museum! ✨");
         }
+
         #endregion
     }
 }
