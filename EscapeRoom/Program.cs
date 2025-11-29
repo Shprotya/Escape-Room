@@ -14,8 +14,6 @@ namespace EscapeRoom
             Game game = new Game();
             game.Start();
 
-            Console.WriteLine("\n\nThank you for playing! Press any key to exit...");
-            Console.ReadKey();
         }
     }
 }

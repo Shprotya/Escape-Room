@@ -69,7 +69,7 @@ namespace EscapeRoom
             Console.WriteLine(@"
             ╔══════════════════════════════════════════════════════════════╗
             ║                                                              ║
-            ║         🏛️ ESCAPE FROM THE ANCIENT MUSEUM 🏛️          ║
+            ║         🏛️ ESCAPE FROM THE ANCIENT MUSEUM 🏛️                 ║
             ║                                                              ║
             ║ You've been locked inside the mysterious Chronos Museum      ║
             ║ after closing time. The exhibits hold ancient secrets        ║
@@ -251,6 +251,7 @@ namespace EscapeRoom
                     // Player chose 'N' or an invalid choice.
                     // The room remains incomplete, keeping them in the inner loop.
                     Console.WriteLine("\nStaying in the room. Remember to check option 2 to examine for items!");
+
                 }
             }
             return false; // Did not advance/is already complete
