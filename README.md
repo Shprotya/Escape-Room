@@ -28,15 +28,17 @@ Navigate through three rooms, each with a unique puzzle that must be solved to p
 ---
 
 ## 🏗️ Project Structure
+```
 EscapeRoom/
-├── Program.cs              # Entry point
-├── Game.cs                 # Main game loop and flow control
-├── Room.cs                 # Room model (items, puzzle, state)
-├── Player.cs               # Player model (inventory, score, hints)
-├── Puzzle.cs               # Abstract base class for all puzzles
+├── Program.cs                # Entry point
+├── Game.cs                   # Main game loop and flow control
+├── Room.cs                   # Room model (items, puzzle, state)
+├── Player.cs                 # Player model (inventory, score, hints)
+├── Puzzle.cs                 # Abstract base class for all puzzles
 ├── PlanetDiscoveryPuzzle.cs  # Room 1 — randomised planet/year puzzle
 ├── LibraryPuzzle.cs          # Room 2 — Fibonacci sequence puzzle
 └── ExitDoorPuzzle.cs         # Room 3 — final riddle + key requirement
+```
 
 ---
 
